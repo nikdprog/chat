@@ -8,9 +8,22 @@ var connectingElement = document.querySelector('#connecting');
 var stompClient = null;
 var username = null;
 
+var isPageReloading = false; // Флаг для отслеживания обновления страницы
+
+var colors = [
+    '#2196F3', '#32c787', '#00BCD4', '#ff5652',
+    '#ffc107', '#ff85af', '#FF9800', '#39bbb0'
+];
+
+// Обработчик события beforeunload
+//window.addEventListener('beforeunload', function () {
+    // Установите флаг, указывающий, что страница перезагружается
+ //   isPageReloading = true;
+//});
+
 function connect() {
     username = document.querySelector('#username').innerText.trim();
-
+    localStorage.setItem('currentUser', JSON.stringify(username));
     var socket = new SockJS('/ws');
     stompClient = Stomp.over(socket);
 
@@ -22,13 +35,19 @@ connect();
 
 function onConnected() {
     // Subscribe to the Public Topic
+
     stompClient.subscribe('/topic/publicChatRoom', onMessageReceived);
 
+    var isConnected = sessionStorage.getItem('connected') === 'true';
+    console.log("connected",isConnected)
     // Tell your username to the server
+    if(isConnected == false) {
     stompClient.send("/app/chat.addUser",
         {},
         JSON.stringify({sender: username, messageType: 'JOIN'})
     );
+        sessionStorage.setItem('connected', 'true');
+    }
 
     // Запрос истории чата при подключении
     $.ajax({
@@ -76,14 +95,22 @@ function onMessageReceived(payload) {
         message.content = message.sender + ' left!';
     } else {
         messageElement.classList.add('chat-message');
-        var usernameElement = document.createElement('strong');
-        usernameElement.classList.add('nickname');
+        var avatarElement = document.createElement('i');
+        var avatarText = document.createTextNode(message.sender[0]);
+        avatarElement.appendChild(avatarText);
+        avatarElement.style['background-color'] = getAvatarColor(message.sender);
+        console.log('color', getAvatarColor(message.sender));
+
+        messageElement.appendChild(avatarElement);
+
+        var usernameElement = document.createElement('span');
+        //usernameElement.classList.add('nickname');
         var usernameText = document.createTextNode(message.sender);
         usernameElement.appendChild(usernameText);
         messageElement.appendChild(usernameElement);
     }
 
-    var textElement = document.createElement('span');
+    var textElement = document.createElement('p');
     var messageText = document.createTextNode(message.content);
     textElement.appendChild(messageText);
 
@@ -93,4 +120,14 @@ function onMessageReceived(payload) {
     messageArea.scrollTop = messageArea.scrollHeight;
 }
 
-messageForm.addEventListener('submit', sendMessage, true); ntListener('submit', sendMessage, true);
+function getAvatarColor(messageSender) {
+    var hash = 0;
+    for (var i = 0; i < messageSender.length; i++) {
+        hash = 31 * hash + messageSender.charCodeAt(i);
+    }
+    var index = Math.abs(hash % colors.length);
+    return colors[index];
+}
+
+//usernameForm.addEventListener('submit', connect, true)
+messageForm.addEventListener('submit', sendMessage, true);

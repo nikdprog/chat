@@ -4,9 +4,11 @@
     box-sizing: border-box;
 }
 
-html, body {
+body {
     height: 100%;
     overflow: hidden;
+    background-color:blue;
+    background-image: url("/css/back.jpg");
 }
 
 #login-page {
@@ -14,7 +16,7 @@ html, body {
 }
 
 .nickname  {
-    color:blue;margin-right:20px;
+    color:red;margin-right:20px;
 }
 .hidden {
     display: none;
