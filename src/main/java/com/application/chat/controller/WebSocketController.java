@@ -21,6 +21,7 @@ public class WebSocketController {
     public ChatMessage sendMessage(@Payload ChatMessage chatMessage) {
         messageService.addMessage(chatMessage);
         System.out.println(chatMessage.getContent());
+        System.out.println("test");
         return chatMessage;
     }
 
