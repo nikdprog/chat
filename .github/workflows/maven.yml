@@ -21,9 +21,7 @@ jobs:
     needs: test
     steps:
       - name: Stop and remove containers, networks
-        run:  |
-          echo "Current directory: $(pwd)"
-          docker-compose -f docker-compose.yaml down
+        run:  docker-compose -f docker-compose.yaml down
       - name: Remove unused data
         run: docker system prune -a -f
   deploy:
