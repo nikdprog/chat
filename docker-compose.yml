@@ -1,11 +1,9 @@
-version: '3.8'
+version: '3'
 
 services:
-  chatapp:
-    image: openjdk:19-jre-slim
-    container_name: chat_container
+  back:
+    build: .
+    image: chat
+    container_name: chat
     ports:
       - "8080:8080"
-    volumes:
-      - ./target/chat-0.0.1-SNAPSHOT.jar:/app/chat-0.0.1-SNAPSHOT.jar
-    command: ["java", "-jar", "/app/chat-0.0.1-SNAPSHOT.jar"]
