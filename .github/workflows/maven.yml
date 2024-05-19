@@ -22,6 +22,8 @@ jobs:
     steps:
       - name: checkout repo
         uses: actions/checkout@v3
+      - name: Set DOCKER_HOST
+        run: echo "DOCKER_HOST=unix:///var/run/docker.sock" >> $GITHUB_ENV
       - name: Stop and remove containers, networks
         run:  docker-compose down
       - name: Stop and remove containers, networks
