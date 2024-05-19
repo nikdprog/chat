@@ -22,6 +22,7 @@ jobs:
     steps:
       - name: Stop and remove containers, networks
         run: docker-compose -f docker-compose.yaml down
+        working-directory: actions-runner/_work
       - name: Remove unused data
         run: docker system prune -a -f
   deploy:
