@@ -17,7 +17,7 @@ jobs:
         run: mvn -B clean package -DskipTests
   test:
     runs-on: windows-latest
-    needs: test
+    needs: build
     steps:
       - name: checkout repo
         uses: actions/checkout@v3
