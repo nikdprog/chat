@@ -4,7 +4,7 @@ version: '3'
 services:
   back:
     build: .
-    image: noohub.ru/chat:lates
+    image: chat
     container_name: chat
     ports:
       - "8080:8080"
